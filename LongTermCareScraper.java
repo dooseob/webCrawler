@@ -14,133 +14,134 @@ import java.util.ArrayList;
 
 public class LongTermCareScraper {
 
-    private static final String CHROME_DRIVER_PATH = "C:/chromedriver/chromedriver.exe"; // ³× ÄÄÇ»ÅÍ °æ·Î·Î º¯°æ!
+    private static final String CHROME_DRIVER_PATH = "C:/chromedriver/chromedriver.exe"; // ë„¤ ì»´í“¨í„° ê²½ë¡œë¡œ ë³€ê²½!
 
     public static void main(String[] args) {
         System.setProperty("webdriver.chrome.driver", CHROME_DRIVER_PATH);
         ChromeOptions options = new ChromeOptions();
-        // options.addArguments("--headless"); // °³¹ß Áß¿¡´Â ÀÌ ÁÙÀ» ÁÖ¼® Ã³¸®ÇÏ¿© ºê¶ó¿ìÀú µ¿ÀÛÀ» Á÷Á¢ È®ÀÎÇÏ¼¼¿ä!
+        // options.addArguments("--headless"); // ê°œë°œ ì¤‘ì—ëŠ” ì´ ì¤„ì„ ì£¼ì„ ì²˜ë¦¬í•˜ì—¬ ë¸Œë¼ìš°ì € ë™ì‘ì„ ì§ì ‘ í™•ì¸í•˜ì„¸ìš”!
         options.addArguments("--disable-gpu");
-        options.addArguments("--remote-allow-origins=*"); // CORS Á¤Ã¥ ¿ìÈ¸ (ÃÖ±Ù Å©·Ò ¹öÀü¿¡¼­ ÇÊ¿äÇÒ ¼ö ÀÖÀ½)
-        options.addArguments("--lang=ko"); // ºê¶ó¿ìÀú ¾ğ¾î ¼³Á¤
+        options.addArguments("--remote-allow-origins=*"); // CORS ì •ì±… ìš°íšŒ (ìµœê·¼ í¬ë¡¬ ë²„ì „ì—ì„œ í•„ìš”í•  ìˆ˜ ìˆìŒ)
+        options.addArguments("--lang=ko"); // ë¸Œë¼ìš°ì € ì–¸ì–´ ì„¤ì •
 
         WebDriver driver = new ChromeDriver(options);
 
-        // ¸ğµç ¿ä¾ç±â°üÀÇ ÃßÃâµÈ µ¥ÀÌÅÍ¸¦ ÀúÀåÇÒ ¸®½ºÆ®
+        // ëª¨ë“  ìš”ì–‘ê¸°ê´€ì˜ ì¶”ì¶œëœ ë°ì´í„°ë¥¼ ì €ì¥í•  ë¦¬ìŠ¤íŠ¸
         List<FacilityEvaluationDTO> allExtractedData = new ArrayList<>();
 
-        // °Ë»ö °á°ú ¸ñ·Ï ÆäÀÌÁö URL (Àç»ç¿ëÀ» À§ÇØ º¯¼ö·Î Á¤ÀÇ)
+        // ê²€ìƒ‰ ê²°ê³¼ ëª©ë¡ í˜ì´ì§€ URL (ì¬ì‚¬ìš©ì„ ìœ„í•´ ë³€ìˆ˜ë¡œ ì •ì˜)
         String searchResultListUrl = "https://www.longtermcare.or.kr/npbs/r/a/201/selectXLtcoSrch.web?siDoCd=41&si_gun_gu_cd=115";
 
         try {
-            // 1. °Ë»ö °á°ú ¸ñ·Ï ÆäÀÌÁö Á¢¼Ó (°æ±âµµ ¼ö¿ø½Ã)
+            // 1. ê²€ìƒ‰ ê²°ê³¼ ëª©ë¡ í˜ì´ì§€ ì ‘ì† (ê²½ê¸°ë„ ìˆ˜ì›ì‹œ)
             driver.get(searchResultListUrl);
-            System.out.println("1´Ü°è: °Ë»ö °á°ú ÆäÀÌÁö Á¢¼Ó ¿Ï·á (ÇöÀç Áöµµ°Ë»ö ÅÇ).");
+            System.out.println("1ë‹¨ê³„: ê²€ìƒ‰ ê²°ê³¼ í˜ì´ì§€ ì ‘ì† ì™„ë£Œ (í˜„ì¬ ì§€ë„ê²€ìƒ‰ íƒ­).");
 
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20)); // ÃæºĞÇÑ ´ë±â ½Ã°£
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20)); // ì¶©ë¶„í•œ ëŒ€ê¸° ì‹œê°„
 
-            // ¡Ú¡Ú¡Ú '¸ñ·Ï°Ë»ö' ÅÇ Å¬¸¯ (°¡Àå Áß¿ä!) ¡Ú¡Ú¡Ú
-            WebElement listSearchTab = wait.until(ExpectedConditions.elementToBeClickable(By.id("C1"))); // 'C1'Àº ¸ñ·Ï°Ë»ö ÅÇÀÇ ID
+            // â˜…â˜…â˜… 'ëª©ë¡ê²€ìƒ‰' íƒ­ í´ë¦­ (ê°€ì¥ ì¤‘ìš”!) â˜…â˜…â˜…
+            WebElement listSearchTab = wait.until(ExpectedConditions.elementToBeClickable(By.id("C1"))); // 'C1'ì€ ëª©ë¡ê²€ìƒ‰ íƒ­ì˜ ID
             listSearchTab.click();
-            System.out.println("2´Ü°è: '¸ñ·Ï°Ë»ö' ÅÇ Å¬¸¯ ¿Ï·á.");
+            System.out.println("2ë‹¨ê³„: 'ëª©ë¡ê²€ìƒ‰' íƒ­ í´ë¦­ ì™„ë£Œ.");
             
-            // '¸ñ·Ï°Ë»ö' ÅÇ ³»¿ëÀÌ ·ÎµåµÉ ¶§±îÁö ±â´Ù¸² (ltco_info_list Å×ÀÌºíÀÌ ³ªÅ¸³¯ ¶§±îÁö)
+            // 'ëª©ë¡ê²€ìƒ‰' íƒ­ ë‚´ìš©ì´ ë¡œë“œë  ë•Œê¹Œì§€ ê¸°ë‹¤ë¦¼ (ltco_info_list í…Œì´ë¸”ì´ ë‚˜íƒ€ë‚  ë•Œê¹Œì§€)
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ltco_info_list"))); 
-            System.out.println("¸ñ·Ï Å×ÀÌºí °¡½Ã¼º È®ÀÎ ¿Ï·á.");
-            Thread.sleep(2000); // Ãß°¡ÀûÀÎ ¾ÈÁ¤¼º È®º¸¸¦ À§ÇÑ ´ë±â
+            System.out.println("ëª©ë¡ í…Œì´ë¸” ê°€ì‹œì„± í™•ì¸ ì™„ë£Œ.");
+            Thread.sleep(2000); // ì¶”ê°€ì ì¸ ì•ˆì •ì„± í™•ë³´ë¥¼ ìœ„í•œ ëŒ€ê¸°
 
-            // 4. ÆäÀÌÁö³×ÀÌ¼Ç Ã³¸® ½ÃÀÛ
+            // 4. í˜ì´ì§€ë„¤ì´ì…˜ ì²˜ë¦¬ ì‹œì‘
             int currentPage = 1;
             int totalPages = 1; 
 
-            // ¡Ú¡Ú¡Ú ÃÑ ÆäÀÌÁö ¼ö ÆÄ¾Ç (´õ ¾ÈÁ¤ÀûÀÎ ¹æ¹ıÀ¸·Î ¼öÁ¤) ¡Ú¡Ú¡Ú
+            // â˜…â˜…â˜… ì´ í˜ì´ì§€ ìˆ˜ íŒŒì•… (ë” ì•ˆì •ì ì¸ ë°©ë²•ìœ¼ë¡œ ìˆ˜ì •) â˜…â˜…â˜…
             try {
-                // .tot_txt ¾È¿¡ "page" ÅØ½ºÆ®°¡ Æ÷ÇÔµÉ ¶§±îÁö ±â´Ù¸² (ÆäÀÌÁö ¼ö°¡ ¿ÏÀüÈ÷ ·ÎµåµÉ ¶§±îÁö)
+                // .tot_txt ì•ˆì— "page" í…ìŠ¤íŠ¸ê°€ í¬í•¨ë  ë•Œê¹Œì§€ ê¸°ë‹¤ë¦¼ (í˜ì´ì§€ ìˆ˜ê°€ ì™„ì „íˆ ë¡œë“œë  ë•Œê¹Œì§€)
                 wait.until(ExpectedConditions.textToBePresentInElementLocated(By.cssSelector(".tot_txt"), "page"));
                 WebElement totalTextElement = driver.findElement(By.cssSelector(".tot_txt span:nth-child(2)"));
                 String totalPagesText = totalTextElement.getText().trim();
                 
-                totalPages = Integer.parseInt(totalPagesText); // "19" °°Àº ¼ıÀÚ¸¸ ÀÖÀ» °ÍÀÌ¹Ç·Î ¹Ù·Î ÆÄ½Ì
-                System.out.println("ÃÑ ÆäÀÌÁö ¼ö: " + totalPages);
+                totalPages = Integer.parseInt(totalPagesText); // "19" ê°™ì€ ìˆ«ìë§Œ ìˆì„ ê²ƒì´ë¯€ë¡œ ë°”ë¡œ íŒŒì‹±
+                System.out.println("ì´ í˜ì´ì§€ ìˆ˜: " + totalPages);
 
             } catch (Exception e) {
-                System.err.println("ÃÑ ÆäÀÌÁö ¼ö ÆÄ¾Ç ¿À·ù: " + e.getMessage());
-                // ¿À·ù ¹ß»ı ½Ã ±âº» 1ÆäÀÌÁö¸¸ Å©·Ñ¸µÇÏµµ·Ï totalPages = 1 À¯Áö
+                System.err.println("ì´ í˜ì´ì§€ ìˆ˜ íŒŒì•… ì˜¤ë¥˜: " + e.getMessage());
+                // ì˜¤ë¥˜ ë°œìƒ ì‹œ ê¸°ë³¸ 1í˜ì´ì§€ë§Œ í¬ë¡¤ë§í•˜ë„ë¡ totalPages = 1 ìœ ì§€
             }
 
-            while (currentPage <= totalPages) { // totalPages°¡ 19·Î Á¦´ë·Î ÆÄ¾ÇµÇ±â¸¦ ±â´ë!
-                System.out.println("\n--- ÇöÀç ÆäÀÌÁö: " + currentPage + " / " + totalPages + " ---");
+            while (currentPage <= totalPages) { // totalPagesê°€ 19ë¡œ ì œëŒ€ë¡œ íŒŒì•…ë˜ê¸°ë¥¼ ê¸°ëŒ€!
+                System.out.println("\n--- í˜„ì¬ í˜ì´ì§€: " + currentPage + " / " + totalPages + " ---");
 
-                // ¡Ú¡Ú¡Ú StaleElementReferenceException ¹æÁö¸¦ À§ÇÑ ÇÙ½É ·ÎÁ÷ ¡Ú¡Ú¡Ú
-                // ¸Å ÆäÀÌÁö, ¸Å ±â°ü Ã³¸® Á÷Àü¿¡ ´Ù½Ã ¿ä¼Ò¸¦ Ã£µµ·Ï ±¸Á¶È­
-                // driver.get()ÀÌ³ª form.submit() ÈÄ¿¡ Ç×»ó »õ·Î¿î DOMÀÌ ·ÎµåµÇ¹Ç·Î,
-                // ÀÌÀü¿¡ Ã£¾Ò´ø ¸ğµç WebElement °´Ã¼´Â ³°¾ÆÁü.
-                // µû¶ó¼­, for ·çÇÁ¸¦ ½ÃÀÛÇÏ±â Àü¿¡ ÇöÀç ÆäÀÌÁöÀÇ ¸ğµç »ó¼¼ URL°ú ÀÌ¸§À» ¹Ì¸® ÃßÃâ.
+                // â˜…â˜…â˜… StaleElementReferenceException ë°©ì§€ë¥¼ ìœ„í•œ í•µì‹¬ ë¡œì§ â˜…â˜…â˜…
+                // ë§¤ í˜ì´ì§€, ë§¤ ê¸°ê´€ ì²˜ë¦¬ ì§ì „ì— ë‹¤ì‹œ ìš”ì†Œë¥¼ ì°¾ë„ë¡ êµ¬ì¡°í™”
+                // driver.get()ì´ë‚˜ form.submit() í›„ì— í•­ìƒ ìƒˆë¡œìš´ DOMì´ ë¡œë“œë˜ë¯€ë¡œ,
+                // ì´ì „ì— ì°¾ì•˜ë˜ ëª¨ë“  WebElement ê°ì²´ëŠ” ë‚¡ì•„ì§.
+                // ë”°ë¼ì„œ, for ë£¨í”„ë¥¼ ì‹œì‘í•˜ê¸° ì „ì— í˜„ì¬ í˜ì´ì§€ì˜ ëª¨ë“  ìƒì„¸ URLê³¼ ì´ë¦„ì„ ë¯¸ë¦¬ ì¶”ì¶œ.
                 
                 List<WebElement> currentTrElements = driver.findElements(By.cssSelector("table#ltco_info_list tbody tr"));
                 List<String> currentDetailUrls = new ArrayList<>();
                 List<String> currentFacilityNames = new ArrayList<>();
-                List<List<String>> currentOtherListInfo = new ArrayList<>(); // ±âÅ¸ ¸ñ·Ï Á¤º¸ ÀúÀå¿ë
+                List<List<String>> currentOtherListInfo = new ArrayList<>(); // ê¸°íƒ€ ëª©ë¡ ì •ë³´ ì €ì¥ìš©
 
                 for (WebElement tr : currentTrElements) {
                     try {
-                        WebElement nameLinkElement = tr.findElement(By.cssSelector("td:nth-child(3) a[name='btn_detail']")); // td ÀÎµ¦½º 2(¼¼ ¹øÂ°)ÀÇ ¸µÅ©
+                        WebElement nameLinkElement = tr.findElement(By.cssSelector("td:nth-child(3) a[name='btn_detail']")); // td ì¸ë±ìŠ¤ 2(ì„¸ ë²ˆì§¸)ì˜ ë§í¬
                         
-                        String facilityName = nameLinkElement.getText().trim().replaceAll("^\\d+\\.", "").trim(); // ¼ıÀÚ. Á¦°Å
-                        String detailUrl = nameLinkElement.getAttribute("href"); // »ó¼¼ ÆäÀÌÁö URL
+                        String facilityName = nameLinkElement.getText().trim().replaceAll("^\\d+\\.", "").trim(); // ìˆ«ì. ì œê±°
+                        String detailUrl = nameLinkElement.getAttribute("href"); // ìƒì„¸ í˜ì´ì§€ URL
 
                         currentDetailUrls.add(detailUrl);
                         currentFacilityNames.add(facilityName);
 
-                        // ¿©±â¿¡¼­ ³ª¸ÓÁö ¸ñ·Ï Á¤º¸(cells.get(3)ºÎÅÍ cells.get(12)±îÁö)¸¦ ¹Ì¸® ÃßÃâ
+                        // ì—¬ê¸°ì—ì„œ ë‚˜ë¨¸ì§€ ëª©ë¡ ì •ë³´(cells.get(3)ë¶€í„° cells.get(12)ê¹Œì§€)ë¥¼ ë¯¸ë¦¬ ì¶”ì¶œ
                         List<WebElement> cells = tr.findElements(By.tagName("td"));
                         List<String> otherInfo = new ArrayList<>();
-                        // ±Ş¿©Á¾·ù(3), Æò°¡¿ä¾à(4), Á¤¿ø(5), Çö¿ø(6), ÀÜ¿©(7), ´ë±â(8), ¸ñ¿åÂ÷·®(9), ÁÖ¼Ò(10), ÀüÈ­¹øÈ£(11), ¿î¿µ½Ã°£(12)
-                        for (int k = 3; k <= 12; k++) { // 3ºÎÅÍ 12±îÁö <td> Á¤º¸
+                        // ê¸‰ì—¬ì¢…ë¥˜(3), í‰ê°€ìš”ì•½(4), ì •ì›(5), í˜„ì›(6), ì”ì—¬(7), ëŒ€ê¸°(8), ëª©ìš•ì°¨ëŸ‰(9), ì£¼ì†Œ(10), ì „í™”ë²ˆí˜¸(11), ìš´ì˜ì‹œê°„(12)
+                        for (int k = 3; k <= 12; k++) { // 3ë¶€í„° 12ê¹Œì§€ <td> ì •ë³´
                             try {
-                                if (k == 10) { // ÁÖ¼Ò´Â <a> ÅÂ±× ¾ÈÀÇ ÅØ½ºÆ®ÀÏ ¼ö ÀÖÀ½
+                                if (k == 10) { // ì£¼ì†ŒëŠ” <a> íƒœê·¸ ì•ˆì˜ í…ìŠ¤íŠ¸ì¼ ìˆ˜ ìˆìŒ
                                     otherInfo.add(cells.get(k).findElement(By.tagName("a")).getText().trim());
                                 } else {
                                     otherInfo.add(cells.get(k).getText().trim());
                                 }
+                                // â˜…â˜…â˜… ìƒì„¸ í˜ì´ì§€ ì²˜ë¦¬ í›„ ë‹¤ì‹œ ëª©ë¡ í˜ì´ì§€ë¡œ ëŒì•„ê°€ê¸° (í•µì‹¬ í•´ê²°ì±…) ì´ë¶€ë¶„ì´ ìƒê¸°ê³  ë¬¸ì œ í•´ê²°ë¨ â˜…â˜…â˜…
                             } catch (org.openqa.selenium.NoSuchElementException | IndexOutOfBoundsException | StaleElementReferenceException e) {
-                                otherInfo.add(""); // ÇØ´ç ¼¿ÀÌ ¾ø°Å³ª ¿À·ù ¹ß»ı ½Ã ºó ¹®ÀÚ¿­
+                                otherInfo.add(""); // í•´ë‹¹ ì…€ì´ ì—†ê±°ë‚˜ ì˜¤ë¥˜ ë°œìƒ ì‹œ ë¹ˆ ë¬¸ìì—´
                             }
                         }
                         currentOtherListInfo.add(otherInfo);
 
                     } catch (org.openqa.selenium.NoSuchElementException e) {
-                        // name='btn_detail' <a> ÅÂ±×°¡ ¾ø´Â trÀº µ¥ÀÌÅÍ ÇàÀÌ ¾Æ´Ô. °Ç³Ê¶Ù±â.
-                        // System.out.println("  [µğ¹ö±×] µ¥ÀÌÅÍ°¡ ¾ø´Â TR ½ºÅµ: " + tr.getText());
+                        // name='btn_detail' <a> íƒœê·¸ê°€ ì—†ëŠ” trì€ ë°ì´í„° í–‰ì´ ì•„ë‹˜. ê±´ë„ˆë›°ê¸°.
+                        // System.out.println("  [ë””ë²„ê·¸] ë°ì´í„°ê°€ ì—†ëŠ” TR ìŠ¤í‚µ: " + tr.getText());
                         continue; 
                     } catch (Exception e) {
-                        System.err.println("  [¿À·ù] ÆäÀÌÁö[" + currentPage + "]¿¡¼­ ¸ñ·Ï ¿ä¼Ò ¹Ì¸® ÃßÃâ Áß ¿À·ù: " + e.getMessage());
+                        System.err.println("  [ì˜¤ë¥˜] í˜ì´ì§€[" + currentPage + "]ì—ì„œ ëª©ë¡ ìš”ì†Œ ë¯¸ë¦¬ ì¶”ì¶œ ì¤‘ ì˜¤ë¥˜: " + e.getMessage());
                         e.printStackTrace();
-                        // ¿À·ù ¹ß»ı ½Ã ÇØ´ç Ç×¸ñ °Ç³Ê¶Ù°í ´ÙÀ½ ·çÇÁ ÁøÇà
+                        // ì˜¤ë¥˜ ë°œìƒ ì‹œ í•´ë‹¹ í•­ëª© ê±´ë„ˆë›°ê³  ë‹¤ìŒ ë£¨í”„ ì§„í–‰
                         currentDetailUrls.add(null); 
-                        currentFacilityNames.add("¿À·ù ±â°ü");
-                        currentOtherListInfo.add(new ArrayList<>()); // ºó ¸®½ºÆ® Ãß°¡
+                        currentFacilityNames.add("ì˜¤ë¥˜ ê¸°ê´€");
+                        currentOtherListInfo.add(new ArrayList<>()); // ë¹ˆ ë¦¬ìŠ¤íŠ¸ ì¶”ê°€
                     }
                 }
-                System.out.println("  ÇöÀç ÆäÀÌÁö¿¡¼­ »ó¼¼ URL ¹× ¸ñ·Ï Á¤º¸ ¹Ì¸® ÃßÃâ ¿Ï·á. ÃÑ " + currentDetailUrls.size() + "°³.");
+                System.out.println("  í˜„ì¬ í˜ì´ì§€ì—ì„œ ìƒì„¸ URL ë° ëª©ë¡ ì •ë³´ ë¯¸ë¦¬ ì¶”ì¶œ ì™„ë£Œ. ì´ " + currentDetailUrls.size() + "ê°œ.");
 
-                // 4-b. °¢ ¿ä¾ç±â°ü¿¡ ´ëÇØ ¹İº¹ Ã³¸® (¹Ì¸® ÃßÃâµÈ URL°ú ÀÌ¸§ »ç¿ë)
+                // 4-b. ê° ìš”ì–‘ê¸°ê´€ì— ëŒ€í•´ ë°˜ë³µ ì²˜ë¦¬ (ë¯¸ë¦¬ ì¶”ì¶œëœ URLê³¼ ì´ë¦„ ì‚¬ìš©)
                 for (int i = 0; i < currentDetailUrls.size(); i++) {
                     String facilityName = currentFacilityNames.get(i);
                     String detailUrl = currentDetailUrls.get(i);
                     List<String> otherInfo = currentOtherListInfo.get(i);
 
-                    // À¯È¿¼º °Ë»ç (¹Ì¸® ÃßÃâ ´Ü°è¿¡¼­ ¿À·ù°¡ ³µÀ» °æ¿ì)
-                    if (detailUrl == null || detailUrl.isEmpty() || facilityName.equals("¿À·ù ±â°ü")) {
-                        System.err.println("  [°Ç³Ê¶Ù±â] À¯È¿ÇÏÁö ¾ÊÀº ±â°ü Á¤º¸ÀÔ´Ï´Ù: " + facilityName + " (URL: " + detailUrl + ")");
+                    // ìœ íš¨ì„± ê²€ì‚¬ (ë¯¸ë¦¬ ì¶”ì¶œ ë‹¨ê³„ì—ì„œ ì˜¤ë¥˜ê°€ ë‚¬ì„ ê²½ìš°)
+                    if (detailUrl == null || detailUrl.isEmpty() || facilityName.equals("ì˜¤ë¥˜ ê¸°ê´€")) {
+                        System.err.println("  [ê±´ë„ˆë›°ê¸°] ìœ íš¨í•˜ì§€ ì•Šì€ ê¸°ê´€ ì •ë³´ì…ë‹ˆë‹¤: " + facilityName + " (URL: " + detailUrl + ")");
                         continue; 
                     }
 
                     FacilityEvaluationDTO evaluationDTO = new FacilityEvaluationDTO(); 
                     evaluationDTO.setFacilityName(facilityName);
 
-                    // 4-b-1. ¹Ì¸® ÃßÃâµÈ ¸ñ·Ï Á¤º¸ DTO¿¡ ¼³Á¤
-                    if (otherInfo.size() >= 10) { // ÇÊ¿äÇÑ ¸ğµç Á¤º¸°¡ ÀÖ´ÂÁö È®ÀÎ
+                    // 4-b-1. ë¯¸ë¦¬ ì¶”ì¶œëœ ëª©ë¡ ì •ë³´ DTOì— ì„¤ì •
+                    if (otherInfo.size() >= 10) { // í•„ìš”í•œ ëª¨ë“  ì •ë³´ê°€ ìˆëŠ”ì§€ í™•ì¸
                         evaluationDTO.setFacilityType(otherInfo.get(0));
                         evaluationDTO.setSummaryEvaluation(otherInfo.get(1));
                         try { evaluationDTO.setCapacity(Integer.parseInt(otherInfo.get(2))); } catch (NumberFormatException e) { evaluationDTO.setCapacity(0); }
@@ -152,29 +153,29 @@ public class LongTermCareScraper {
                         evaluationDTO.setPhoneNumber(otherInfo.get(8));
                         evaluationDTO.setOperationHours(otherInfo.get(9));
                     }
-                    System.out.println("  -> ±â°ü: " + facilityName + " Ã³¸® ½ÃÀÛ (¸ñ·Ï Á¤º¸ DTO ¼³Á¤ ¿Ï·á)");
+                    System.out.println("  -> ê¸°ê´€: " + facilityName + " ì²˜ë¦¬ ì‹œì‘ (ëª©ë¡ ì •ë³´ DTO ì„¤ì • ì™„ë£Œ)");
 
 
-                    // 4-b-2. »ó¼¼ Á¤º¸ ÆäÀÌÁö·Î ÀÌµ¿
+                    // 4-b-2. ìƒì„¸ ì •ë³´ í˜ì´ì§€ë¡œ ì´ë™
                     driver.get(detailUrl);
-                    System.out.println("  »ó¼¼ Á¤º¸ ÆäÀÌÁö Á¢¼Ó ¿Ï·á.");
+                    System.out.println("  ìƒì„¸ ì •ë³´ í˜ì´ì§€ ì ‘ì† ì™„ë£Œ.");
 
-                    // 'Æò°¡Á¤º¸' ÅÇ Å¬¸¯
+                    // 'í‰ê°€ì •ë³´' íƒ­ í´ë¦­
                     WebElement evaluationTab = wait.until(ExpectedConditions.elementToBeClickable(By.id("tab_12")));
                     evaluationTab.click();
-                    System.out.println("  'Æò°¡Á¤º¸' ÅÇ Å¬¸¯ ¿Ï·á.");
+                    System.out.println("  'í‰ê°€ì •ë³´' íƒ­ í´ë¦­ ì™„ë£Œ.");
 
-                    // Æò°¡ Á¤º¸ ·Îµå ´ë±â
+                    // í‰ê°€ ì •ë³´ ë¡œë“œ ëŒ€ê¸°
                     wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.grade_box")));
                     Thread.sleep(500); 
 
-                    // 4-b-3. Æò°¡ µî±Ş ¹× Á¡¼ö µ¥ÀÌÅÍ ÃßÃâ (»ó¼¼ ÆäÀÌÁö¿¡¼­)
+                    // 4-b-3. í‰ê°€ ë“±ê¸‰ ë° ì ìˆ˜ ë°ì´í„° ì¶”ì¶œ (ìƒì„¸ í˜ì´ì§€ì—ì„œ)
                     try {
                         List<WebElement> evaluationGradeElements = driver.findElements(By.cssSelector("div.grade_box span.pink"));
                         if (!evaluationGradeElements.isEmpty()) {
                             evaluationDTO.setEvaluationGrade(evaluationGradeElements.get(0).getText().trim()); 
                         }
-                    } catch (Exception e) { System.err.println("  [¿À·ù] »ó¼¼ Æò°¡ µî±Ş ÃßÃâ ¿À·ù: " + e.getMessage()); }
+                    } catch (Exception e) { System.err.println("  [ì˜¤ë¥˜] ìƒì„¸ í‰ê°€ ë“±ê¸‰ ì¶”ì¶œ ì˜¤ë¥˜: " + e.getMessage()); }
 
                     try {
                         WebElement scoreTable = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.tbl_col.tbl_point table")));
@@ -193,25 +194,26 @@ public class LongTermCareScraper {
                                 try { evaluationDTO.setResultScore(Integer.parseInt(scores.get(5).getText().trim())); } catch (NumberFormatException e) { evaluationDTO.setResultScore(0); }
                             }
                         }
-                    } catch (Exception e) { System.err.println("  [¿À·ù] Æò°¡ Ç×¸ñº° Á¡¼ö ÃßÃâ ¿À·ù: " + e.getMessage()); }
+                    } catch (Exception e) { System.err.println("  [ì˜¤ë¥˜] í‰ê°€ í•­ëª©ë³„ ì ìˆ˜ ì¶”ì¶œ ì˜¤ë¥˜: " + e.getMessage()); }
 
+                    // â˜…â˜…â˜… allExtractedData ë¦¬ìŠ¤íŠ¸ë¥¼ DBì— ì¼ê´„ ì €ì¥í•˜ëŠ” ë¡œì§
                     allExtractedData.add(evaluationDTO); 
-                    System.out.println("  >>> ÃßÃâµÈ µ¥ÀÌÅÍ: " + evaluationDTO.toString());
+                    System.out.println("  >>> ì¶”ì¶œëœ ë°ì´í„°: " + evaluationDTO.toString());
 
-                    // ¡Ú¡Ú¡Ú »ó¼¼ ÆäÀÌÁö Ã³¸® ÈÄ ´Ù½Ã ¸ñ·Ï ÆäÀÌÁö·Î µ¹¾Æ°¡±â (ÇÙ½É ÇØ°áÃ¥) ¡Ú¡Ú¡Ú
-                    // ¸Å ±â°ü Ã³¸® ÈÄ, driver.get()À¸·Î ¿ø·¡ ¸ñ·Ï ÆäÀÌÁö·Î µ¹¾Æ¿Í¾ß ´ÙÀ½ ±â°üÀ» Ã£À» ¼ö ÀÖÀ½.
+                    // â˜…â˜…â˜… ìƒì„¸ í˜ì´ì§€ ì²˜ë¦¬ í›„ ë‹¤ì‹œ ëª©ë¡ í˜ì´ì§€ë¡œ ëŒì•„ê°€ê¸° (í•µì‹¬ í•´ê²°ì±…) â˜…â˜…â˜…
+                    // ë§¤ ê¸°ê´€ ì²˜ë¦¬ í›„, driver.get()ìœ¼ë¡œ ì›ë˜ ëª©ë¡ í˜ì´ì§€ë¡œ ëŒì•„ì™€ì•¼ ë‹¤ìŒ ê¸°ê´€ì„ ì°¾ì„ ìˆ˜ ìˆìŒ.
                     driver.get(searchResultListUrl); 
                     wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("ltco_info_list")));
                     Thread.sleep(1000); 
-                    // ¸ñ·Ï°Ë»ö ÅÇÀÌ ´Ù½Ã Áöµµ°Ë»öÀ¸·Î µ¹¾Æ°¥ ¼ö ÀÖÀ¸¹Ç·Î ´Ù½Ã Å¬¸¯ (ÇÊ¿ä½Ã)
-                    // Áö±İÀº driver.get()À¸·Î µ¹¾Æ°¡¸é ÀÚµ¿À¸·Î C1 ÅÇÀÌ on »óÅÂ·Î À¯ÁöµÉ °ÍÀÓ
+                    // ëª©ë¡ê²€ìƒ‰ íƒ­ì´ ë‹¤ì‹œ ì§€ë„ê²€ìƒ‰ìœ¼ë¡œ ëŒì•„ê°ˆ ìˆ˜ ìˆìœ¼ë¯€ë¡œ ë‹¤ì‹œ í´ë¦­ (í•„ìš”ì‹œ)
+                    // ì§€ê¸ˆì€ driver.get()ìœ¼ë¡œ ëŒì•„ê°€ë©´ ìë™ìœ¼ë¡œ C1 íƒ­ì´ on ìƒíƒœë¡œ ìœ ì§€ë  ê²ƒì„
                     
-                } // ÇöÀç ÆäÀÌÁö ³» ¿ä¾ç±â°ü ·çÇÁ ³¡
+                } // í˜„ì¬ í˜ì´ì§€ ë‚´ ìš”ì–‘ê¸°ê´€ ë£¨í”„ ë
 
-                // 4-d. ´ÙÀ½ ÆäÀÌÁö·Î ÀÌµ¿
+                // 4-d. ë‹¤ìŒ í˜ì´ì§€ë¡œ ì´ë™
                 currentPage++;
                 if (currentPage <= totalPages) {
-                    System.out.println("\n--- ´ÙÀ½ ÆäÀÌÁö·Î ÀÌµ¿: " + currentPage + " ---");
+                    System.out.println("\n--- ë‹¤ìŒ í˜ì´ì§€ë¡œ ì´ë™: " + currentPage + " ---");
                     WebElement currentPageNoInput = driver.findElement(By.id("cu_pag_no"));
                     ((org.openqa.selenium.JavascriptExecutor)driver).executeScript("arguments[0].value = arguments[1];", currentPageNoInput, String.valueOf(currentPage));
 
@@ -221,13 +223,13 @@ public class LongTermCareScraper {
                     Thread.sleep(2000); 
                 }
 
-            } // ÀüÃ¼ ÆäÀÌÁö ·çÇÁ ³¡
+            } // ì „ì²´ í˜ì´ì§€ ë£¨í”„ ë
 
-            System.out.println("\n--- ¸ğµç ¿ä¾ç±â°ü ¸ñ·Ï ¹× Æò°¡ Á¤º¸ ÃßÃâ ¿Ï·á ---");
-            System.out.println("ÃÑ ÃßÃâµÈ ±â°ü ¼ö: " + allExtractedData.size());
+            System.out.println("\n--- ëª¨ë“  ìš”ì–‘ê¸°ê´€ ëª©ë¡ ë° í‰ê°€ ì •ë³´ ì¶”ì¶œ ì™„ë£Œ ---");
+            System.out.println("ì´ ì¶”ì¶œëœ ê¸°ê´€ ìˆ˜: " + allExtractedData.size());
 
         } catch (Exception e) {
-            System.err.println("Å©·Ñ¸µ ÀüÃ¼ °úÁ¤¿¡¼­ ¿À·ù ¹ß»ı: " + e.getMessage());
+            System.err.println("í¬ë¡¤ë§ ì „ì²´ ê³¼ì •ì—ì„œ ì˜¤ë¥˜ ë°œìƒ: " + e.getMessage());
             e.printStackTrace();
         } finally {
             if (driver != null) {
